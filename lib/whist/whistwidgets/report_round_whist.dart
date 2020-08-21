@@ -19,6 +19,8 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
   ConstColors constColors = ConstColors();
   ConstBids constBids = ConstBids();
   FlutterToast flutterToast;
+  int indexForNoloOrTrick = 0;
+  List<Widget> tricksOrNoloLayout;
 
   Map<String, NamesRaisedButton> namesMap = Map();
   Map<String, BidRaisedButton> bidTypeMap = Map();
@@ -32,39 +34,41 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
       "p3": NamesRaisedButton(widget.game.p3.name, this.constColors),
       "p4": NamesRaisedButton(widget.game.p4.name, this.constColors), });
 
-    bidTypeMap.addAll( {constBids.ALM: BidRaisedButton(constBids.ALM, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons),
-      constBids.HALVE: BidRaisedButton(constBids.HALVE, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons),
-      constBids.GODE: BidRaisedButton(constBids.GODE, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons),
-      constBids.SANS: BidRaisedButton(constBids.SANS, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons),
-      constBids.VIP1: BidRaisedButton(constBids.VIP1, this.constColors, 3.0, this.setStandardColorOnBidTypeButtons),
-      constBids.VIP2: BidRaisedButton(constBids.VIP2, this.constColors, 3.0, this.setStandardColorOnBidTypeButtons),
-      constBids.VIP3: BidRaisedButton(constBids.VIP3, this.constColors, 3.0, this.setStandardColorOnBidTypeButtons),
-      constBids.SOL: BidRaisedButton(constBids.SOL, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons),
-      constBids.RENSOL: BidRaisedButton(constBids.RENSOL, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons),
-      constBids.BORD: BidRaisedButton(constBids.BORD, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons),
-      constBids.RENBORD: BidRaisedButton(constBids.RENBORD, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons) });
+    bidTypeMap.addAll( {constBids.ALM: BidRaisedButton(constBids.ALM, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
+      constBids.HALVE: BidRaisedButton(constBids.HALVE, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
+      constBids.GODE: BidRaisedButton(constBids.GODE, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
+      constBids.SANS: BidRaisedButton(constBids.SANS, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
+      constBids.VIP1: BidRaisedButton(constBids.VIP1, this.constColors, 3.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
+      constBids.VIP2: BidRaisedButton(constBids.VIP2, this.constColors, 3.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
+      constBids.VIP3: BidRaisedButton(constBids.VIP3, this.constColors, 3.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
+      constBids.SOL: BidRaisedButton(constBids.SOL, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
+      constBids.RENSOL: BidRaisedButton(constBids.RENSOL, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
+      constBids.BORD: BidRaisedButton(constBids.BORD, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
+      constBids.RENBORD: BidRaisedButton(constBids.RENBORD, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo) });
 
-    bidSizeMap.addAll( {"8": BidRaisedButton("8", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons),
-      "9": BidRaisedButton("9", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons),
-      "10": BidRaisedButton("10", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons),
-      "11": BidRaisedButton("11", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons),
-      "12": BidRaisedButton("12", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons),
-      "13": BidRaisedButton("13", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons) });
+    bidSizeMap.addAll( {"8": BidRaisedButton("8", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setIndexForTrickOrNolo),
+      "9": BidRaisedButton("9", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setIndexForTrickOrNolo),
+      "10": BidRaisedButton("10", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setIndexForTrickOrNolo),
+      "11": BidRaisedButton("11", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setIndexForTrickOrNolo),
+      "12": BidRaisedButton("12", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setIndexForTrickOrNolo),
+      "13": BidRaisedButton("13", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setIndexForTrickOrNolo) });
 
-    tricksGottenMap.addAll( {"0": BidRaisedButton("0", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons),
-      "1": BidRaisedButton("1", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons),
-      "2": BidRaisedButton("2", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons),
-      "3": BidRaisedButton("3", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons),
-      "4": BidRaisedButton("4", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons),
-      "5": BidRaisedButton("5", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons),
-      "6": BidRaisedButton("6", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons),
-      "7": BidRaisedButton("7", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons),
-      "8": BidRaisedButton("8", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons),
-      "9": BidRaisedButton("9", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons),
-      "10": BidRaisedButton("10", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons),
-      "11": BidRaisedButton("11", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons),
-      "12": BidRaisedButton("12", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons),
-      "13": BidRaisedButton("13", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons), });
+    tricksGottenMap.addAll( {"0": BidRaisedButton("0", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
+      "1": BidRaisedButton("1", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
+      "2": BidRaisedButton("2", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
+      "3": BidRaisedButton("3", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
+      "4": BidRaisedButton("4", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
+      "5": BidRaisedButton("5", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
+      "6": BidRaisedButton("6", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
+      "7": BidRaisedButton("7", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
+      "8": BidRaisedButton("8", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
+      "9": BidRaisedButton("9", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
+      "10": BidRaisedButton("10", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
+      "11": BidRaisedButton("11", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
+      "12": BidRaisedButton("12", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
+      "13": BidRaisedButton("13", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo), });
+
+    tricksOrNoloLayout = [TricksButtonLayout(this.bidSizeMap, this.tricksGottenMap), NoloLayout()];
 
     flutterToast = FlutterToast(context);
     super.initState();
@@ -154,78 +158,7 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
               SizedBox(height: 10),
 
 
-
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Row(
-                  children: <Widget>[
-                    Text(
-                      "Angiv meldingens størrelse:",
-                      style: TextStyle(
-                        color: constColors.textColor,
-                      ),
-                    ),
-                  ],
-                  mainAxisAlignment: MainAxisAlignment.start,
-                ),
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: <Widget>[
-                  this.bidSizeMap["8"],
-                  this.bidSizeMap["9"],
-                  this.bidSizeMap["10"],
-                  this.bidSizeMap["11"],
-                  this.bidSizeMap["12"],
-                  this.bidSizeMap["13"],
-                ],
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              ),
-              SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Row(
-                  children: <Widget>[
-                    Text(
-                      "Angiv hvor mange stik spilføreren og makkeren vandt:",
-                      style: TextStyle(
-                        color: constColors.textColor,
-                      ),
-                    ),
-                  ],
-                  mainAxisAlignment: MainAxisAlignment.start,
-                ),
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: <Widget>[
-                  this.tricksGottenMap["0"],
-                  this.tricksGottenMap["1"],
-                  this.tricksGottenMap["2"],
-                  this.tricksGottenMap["3"],
-                  this.tricksGottenMap["4"],
-                  this.tricksGottenMap["5"],
-                  this.tricksGottenMap["6"],
-                ],
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: <Widget>[
-                  this.tricksGottenMap["7"],
-                  this.tricksGottenMap["8"],
-                  this.tricksGottenMap["9"],
-                  this.tricksGottenMap["10"],
-                  this.tricksGottenMap["11"],
-                  this.tricksGottenMap["12"],
-                  this.tricksGottenMap["13"],
-                ],
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              ),
-
-
-              //NoloLayout(),
-              //TricksButtonLayout(),
+              tricksOrNoloLayout[indexForNoloOrTrick],
 
 
               SizedBox(height: 20),
@@ -331,9 +264,21 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
       toastDuration: Duration(seconds: 2),
     );
   }
-  
-  void setStandardColorOnBidTypeButtons() =>
+
+  void setStandardColorOnBidTypeButtons() {
     this.bidTypeMap.forEach((k, v) => v.setStandardColor());
+  }
+
+  void setIndexForTrickOrNolo(String text) {
+    setState(() {
+      if ([constBids.SOL, constBids.RENSOL, constBids.BORD, constBids.RENBORD].contains(text)) {
+        this.indexForNoloOrTrick = 1;
+      } else {
+        this.indexForNoloOrTrick = 0;
+      }
+    });
+
+  }
 
   void setStandardColorOnBidSizeButtons() =>
     this.bidSizeMap.forEach((k, v) => v.setStandardColor());
@@ -413,9 +358,9 @@ class BidRaisedButton extends StatefulWidget {
   final ConstColors constColors;
   final double widthCount;
   final Function() callback;
-  //final Map btnMap;
+  final Function(String) callbackNoloOrTrick;
 
-  BidRaisedButton(this.text, this.constColors, this.widthCount, this.callback);
+  BidRaisedButton(this.text, this.constColors, this.widthCount, this.callback, this.callbackNoloOrTrick);
 
   final _BidRaisedButtonState _bidRaisedButtonState = _BidRaisedButtonState();
 
@@ -463,6 +408,7 @@ class _BidRaisedButtonState extends State<BidRaisedButton> {
         this.widget.callback();
         this.color = this.widget.constColors.btnSelectedColor;
         this.isPressed = true;
+        this.widget.callbackNoloOrTrick(this.widget.text);
       } else {
         this.color = this.widget.constColors.btnColor;
         this.isPressed = false;
@@ -479,28 +425,96 @@ class _BidRaisedButtonState extends State<BidRaisedButton> {
 }
 
 
+
 class TricksButtonLayout extends StatefulWidget {
 
-  final ReportRoundWhist reportRoundWhist;
+  final Map<String, BidRaisedButton> bidSizeMap, tricksGottenMap;
 
-  TricksButtonLayout(this.reportRoundWhist);
+  TricksButtonLayout(this.bidSizeMap, this.tricksGottenMap);
 
   @override
   _TricksButtonLayoutState createState() => _TricksButtonLayoutState();
 }
 
 class _TricksButtonLayoutState extends State<TricksButtonLayout> {
-  ConstColors constColors;
+  ConstColors constColors = ConstColors();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Text("Tricks"),
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Row(
+            children: <Widget>[
+              Text(
+                "Angiv meldingens størrelse:",
+                style: TextStyle(
+                  color: constColors.textColor,
+                ),
+              ),
+            ],
+            mainAxisAlignment: MainAxisAlignment.start,
+          ),
+        ),
+        SizedBox(height: 10),
+        Row(
+          children: <Widget>[
+            this.widget.bidSizeMap["8"],
+            this.widget.bidSizeMap["9"],
+            this.widget.bidSizeMap["10"],
+            this.widget.bidSizeMap["11"],
+            this.widget.bidSizeMap["12"],
+            this.widget.bidSizeMap["13"],
+          ],
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        ),
+        SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Row(
+            children: <Widget>[
+              Text(
+                "Angiv hvor mange stik spilføreren og makkeren vandt:",
+                style: TextStyle(
+                  color: constColors.textColor,
+                ),
+              ),
+            ],
+            mainAxisAlignment: MainAxisAlignment.start,
+          ),
+        ),
+        SizedBox(height: 10),
+        Row(
+          children: <Widget>[
+            this.widget.tricksGottenMap["0"],
+            this.widget.tricksGottenMap["1"],
+            this.widget.tricksGottenMap["2"],
+            this.widget.tricksGottenMap["3"],
+            this.widget.tricksGottenMap["4"],
+            this.widget.tricksGottenMap["5"],
+            this.widget.tricksGottenMap["6"],
+          ],
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        ),
+        SizedBox(height: 10),
+        Row(
+          children: <Widget>[
+            this.widget.tricksGottenMap["7"],
+            this.widget.tricksGottenMap["8"],
+            this.widget.tricksGottenMap["9"],
+            this.widget.tricksGottenMap["10"],
+            this.widget.tricksGottenMap["11"],
+            this.widget.tricksGottenMap["12"],
+            this.widget.tricksGottenMap["13"],
+          ],
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        ),
       ],
     );
   }
 }
+
 
 
 class NoloLayout extends StatefulWidget {
