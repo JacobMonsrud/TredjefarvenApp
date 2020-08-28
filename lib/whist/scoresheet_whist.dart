@@ -1,5 +1,4 @@
-import 'package:tredjefarven/util/const_bids.dart';
-
+import 'package:tredjefarven/whist/whistwidgets/whistutil/const_bids.dart';
 class ScoreSheet {
 
 	ConstBids constBids = ConstBids();

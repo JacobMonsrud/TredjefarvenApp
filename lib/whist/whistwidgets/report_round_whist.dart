@@ -3,9 +3,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tredjefarven/util/const_colors.dart';
 import 'package:tredjefarven/whist/round_whist.dart';
 import 'package:tredjefarven/whist/game_whist.dart';
-import 'package:tredjefarven/util/const_bids.dart';
+import 'file:///C:/Tredjefarven/tredjefarvenApp/TredjefarvenApp/lib/whist/whistwidgets/whistutil/const_bids.dart';
 import 'package:tredjefarven/whist/whistwidgets/whistutil/buttons.dart';
-import 'package:tredjefarven/whist/whistwidgets/whistutil/reportlayouts.dart';
 
 class ReportRoundWhist extends StatefulWidget {
   final Function(Round) callback;
@@ -21,16 +20,17 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
   ConstColors constColors = ConstColors();
   ConstBids constBids = ConstBids();
   FlutterToast flutterToast;
-  int indexForNoloOrTrick = 0;
 
-  //NoloLayout noloLayout;
-  //TricksButtonLayout tricksButtonLayout;
   bool showNolo, showTricks;
 
   Map<String, NamesRaisedButton> namesMap = Map();
   Map<String, BidRaisedButton> bidTypeMap = Map();
   Map<String, BidRaisedButton> bidSizeMap = Map();
   Map<String, BidRaisedButton> tricksGottenMap = Map();
+  Map<String, BidRaisedButton> noloMapP1 = Map();
+  Map<String, BidRaisedButton> noloMapP2 = Map();
+  Map<String, BidRaisedButton> noloMapP3 = Map();
+  Map<String, BidRaisedButton> noloMapP4 = Map();
 
   @override
   void initState() {
@@ -39,42 +39,52 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
       "p3": NamesRaisedButton(widget.game.p3.name, this.constColors),
       "p4": NamesRaisedButton(widget.game.p4.name, this.constColors), });
 
-    bidTypeMap.addAll( {constBids.ALM: BidRaisedButton(constBids.ALM, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
-      constBids.HALVE: BidRaisedButton(constBids.HALVE, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
-      constBids.GODE: BidRaisedButton(constBids.GODE, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
-      constBids.SANS: BidRaisedButton(constBids.SANS, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
-      constBids.VIP1: BidRaisedButton(constBids.VIP1, this.constColors, 3.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
-      constBids.VIP2: BidRaisedButton(constBids.VIP2, this.constColors, 3.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
-      constBids.VIP3: BidRaisedButton(constBids.VIP3, this.constColors, 3.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
-      constBids.SOL: BidRaisedButton(constBids.SOL, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
-      constBids.RENSOL: BidRaisedButton(constBids.RENSOL, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
-      constBids.BORD: BidRaisedButton(constBids.BORD, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo),
-      constBids.RENBORD: BidRaisedButton(constBids.RENBORD, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setIndexForTrickOrNolo) });
+    bidTypeMap.addAll( {constBids.ALM: BidRaisedButton(constBids.ALM, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setStatusForTrickOrNoloLayout),
+      constBids.HALVE: BidRaisedButton(constBids.HALVE, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setStatusForTrickOrNoloLayout),
+      constBids.GODE: BidRaisedButton(constBids.GODE, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setStatusForTrickOrNoloLayout),
+      constBids.SANS: BidRaisedButton(constBids.SANS, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setStatusForTrickOrNoloLayout),
+      constBids.VIP1: BidRaisedButton(constBids.VIP1, this.constColors, 3.0, this.setStandardColorOnBidTypeButtons, this.setStatusForTrickOrNoloLayout),
+      constBids.VIP2: BidRaisedButton(constBids.VIP2, this.constColors, 3.0, this.setStandardColorOnBidTypeButtons, this.setStatusForTrickOrNoloLayout),
+      constBids.VIP3: BidRaisedButton(constBids.VIP3, this.constColors, 3.0, this.setStandardColorOnBidTypeButtons, this.setStatusForTrickOrNoloLayout),
+      constBids.SOL: BidRaisedButton(constBids.SOL, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setStatusForTrickOrNoloLayout),
+      constBids.RENSOL: BidRaisedButton(constBids.RENSOL, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setStatusForTrickOrNoloLayout),
+      constBids.BORD: BidRaisedButton(constBids.BORD, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setStatusForTrickOrNoloLayout),
+      constBids.RENBORD: BidRaisedButton(constBids.RENBORD, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setStatusForTrickOrNoloLayout) });
 
-    bidSizeMap.addAll( {"8": BidRaisedButton("8", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setIndexForTrickOrNolo),
-      "9": BidRaisedButton("9", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setIndexForTrickOrNolo),
-      "10": BidRaisedButton("10", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setIndexForTrickOrNolo),
-      "11": BidRaisedButton("11", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setIndexForTrickOrNolo),
-      "12": BidRaisedButton("12", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setIndexForTrickOrNolo),
-      "13": BidRaisedButton("13", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setIndexForTrickOrNolo) });
+    bidSizeMap.addAll( {"8": BidRaisedButton("8", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setStatusForTrickOrNoloLayout),
+      "9": BidRaisedButton("9", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setStatusForTrickOrNoloLayout),
+      "10": BidRaisedButton("10", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setStatusForTrickOrNoloLayout),
+      "11": BidRaisedButton("11", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setStatusForTrickOrNoloLayout),
+      "12": BidRaisedButton("12", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setStatusForTrickOrNoloLayout),
+      "13": BidRaisedButton("13", this.constColors, 6.0, this.setStandardColorOnBidSizeButtons, this.setStatusForTrickOrNoloLayout) });
 
-    tricksGottenMap.addAll( {"0": BidRaisedButton("0", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
-      "1": BidRaisedButton("1", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
-      "2": BidRaisedButton("2", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
-      "3": BidRaisedButton("3", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
-      "4": BidRaisedButton("4", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
-      "5": BidRaisedButton("5", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
-      "6": BidRaisedButton("6", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
-      "7": BidRaisedButton("7", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
-      "8": BidRaisedButton("8", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
-      "9": BidRaisedButton("9", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
-      "10": BidRaisedButton("10", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
-      "11": BidRaisedButton("11", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
-      "12": BidRaisedButton("12", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo),
-      "13": BidRaisedButton("13", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setIndexForTrickOrNolo), });
+    tricksGottenMap.addAll( {"0": BidRaisedButton("0", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setStatusForTrickOrNoloLayout),
+      "1": BidRaisedButton("1", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setStatusForTrickOrNoloLayout),
+      "2": BidRaisedButton("2", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setStatusForTrickOrNoloLayout),
+      "3": BidRaisedButton("3", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setStatusForTrickOrNoloLayout),
+      "4": BidRaisedButton("4", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setStatusForTrickOrNoloLayout),
+      "5": BidRaisedButton("5", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setStatusForTrickOrNoloLayout),
+      "6": BidRaisedButton("6", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setStatusForTrickOrNoloLayout),
+      "7": BidRaisedButton("7", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setStatusForTrickOrNoloLayout),
+      "8": BidRaisedButton("8", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setStatusForTrickOrNoloLayout),
+      "9": BidRaisedButton("9", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setStatusForTrickOrNoloLayout),
+      "10": BidRaisedButton("10", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setStatusForTrickOrNoloLayout),
+      "11": BidRaisedButton("11", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setStatusForTrickOrNoloLayout),
+      "12": BidRaisedButton("12", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setStatusForTrickOrNoloLayout),
+      "13": BidRaisedButton("13", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setStatusForTrickOrNoloLayout), });
 
-    //tricksButtonLayout = TricksButtonLayout(this.bidSizeMap, this.tricksGottenMap);
-    //noloLayout = NoloLayout();
+    noloMapP1.addAll( {constBids.P1NOLOWON: BidRaisedButton("p1win", this.constColors, 2, this.setStandardColorOnNoloP1Buttons, (s) => {}),
+      constBids.P1NOLOLOSE: BidRaisedButton("p1lose", this.constColors, 2, this.setStandardColorOnNoloP1Buttons, (s) => {}) });
+
+    noloMapP2.addAll( {constBids.P2NOLOWON: BidRaisedButton("p2win", this.constColors, 2, this.setStandardColorOnNoloP2Buttons, (s) => {}),
+      constBids.P2NOLOLOSE: BidRaisedButton("p2lose", this.constColors, 2, this.setStandardColorOnNoloP2Buttons, (s) => {}) });
+
+    noloMapP3.addAll( {constBids.P3NOLOWON: BidRaisedButton("p3win", this.constColors, 2, this.setStandardColorOnNoloP3Buttons, (s) => {}),
+      constBids.P3NOLOLOSE: BidRaisedButton("p3lose", this.constColors, 2, this.setStandardColorOnNoloP3Buttons, (s) => {}) });
+
+    noloMapP4.addAll( {constBids.P4NOLOWON: BidRaisedButton("p4win", this.constColors, 2, this.setStandardColorOnNoloP4Buttons, (s) => {}),
+      constBids.P4NOLOLOSE: BidRaisedButton("p4lose", this.constColors, 2, this.setStandardColorOnNoloP4Buttons, (s) => {}) });
+
     showNolo = false;
     showTricks = true;
 
@@ -243,15 +253,40 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
 
               Visibility(
                 child: Column(
-                  children: [
-                    Text("nolo"),
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        this.noloMapP1[constBids.P1NOLOWON],
+                        this.noloMapP1[constBids.P1NOLOLOSE],
+                      ],
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        this.noloMapP2[constBids.P2NOLOWON],
+                        this.noloMapP2[constBids.P2NOLOLOSE],
+                      ],
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        this.noloMapP3[constBids.P3NOLOWON],
+                        this.noloMapP3[constBids.P3NOLOLOSE],
+                      ],
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        this.noloMapP4[constBids.P4NOLOWON],
+                        this.noloMapP4[constBids.P4NOLOLOSE],
+                      ],
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    ),
                   ],
                 ),
                 visible: showNolo,
                 maintainState: true,
               ),
-
-              //tricksOrNoloLayout,
 
               SizedBox(height: 20),
               SizedBox(
@@ -357,11 +392,28 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
     );
   }
 
-  void setStandardColorOnBidTypeButtons() {
+  void setStandardColorOnBidTypeButtons() =>
     this.bidTypeMap.forEach((k, v) => v.setStandardColor());
-  }
 
-  void setIndexForTrickOrNolo(String text) {
+  void setStandardColorOnBidSizeButtons() =>
+    this.bidSizeMap.forEach((k, v) => v.setStandardColor());
+
+  void setStandardColorOnTricksGottenButtons() =>
+    this.tricksGottenMap.forEach((k, v) => v.setStandardColor());
+
+  void setStandardColorOnNoloP1Buttons() =>
+    this.noloMapP1.forEach((k, v) => v.setStandardColor());
+
+  void setStandardColorOnNoloP2Buttons() =>
+      this.noloMapP2.forEach((k, v) => v.setStandardColor());
+
+  void setStandardColorOnNoloP3Buttons() =>
+      this.noloMapP3.forEach((k, v) => v.setStandardColor());
+
+  void setStandardColorOnNoloP4Buttons() =>
+      this.noloMapP4.forEach((k, v) => v.setStandardColor());
+
+  void setStatusForTrickOrNoloLayout(String text) {
     setState(() {
       if ([constBids.SOL, constBids.RENSOL, constBids.BORD, constBids.RENBORD].contains(text)) {
         showNolo = true;
@@ -372,11 +424,5 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
       }
     });
   }
-
-  void setStandardColorOnBidSizeButtons() =>
-    this.bidSizeMap.forEach((k, v) => v.setStandardColor());
-
-  void setStandardColorOnTricksGottenButtons() =>
-    this.tricksGottenMap.forEach((k, v) => v.setStandardColor());
 
 }

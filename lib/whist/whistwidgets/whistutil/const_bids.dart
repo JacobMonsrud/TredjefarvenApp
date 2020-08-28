@@ -14,4 +14,13 @@ class ConstBids {
 	final String BORD = "BORD";
 	final String RENBORD = "REN BORD";
 
+	final String P1NOLOWON = "P1NOLOWON";
+	final String P1NOLOLOSE = "P1NOLOLOSE";
+	final String P2NOLOWON = "P2NOLOWON";
+	final String P2NOLOLOSE = "P2NOLOLOSE";
+	final String P3NOLOWON = "P3NOLOWON";
+	final String P3NOLOLOSE = "P3NOLOLOSE";
+	final String P4NOLOWON = "P4NOLOWON";
+	final String P4NOLOLOSE = "P4NOLOLOSE";
+
 }

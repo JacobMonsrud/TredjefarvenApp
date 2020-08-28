@@ -1,7 +1,7 @@
 import 'package:tredjefarven/whist/player_round_whist.dart';
 import 'package:tredjefarven/whist/player_whist.dart';
 import 'package:tredjefarven/whist/round_whist.dart';
-import 'package:tredjefarven/util/const_bids.dart';
+import 'file:///C:/Tredjefarven/tredjefarvenApp/TredjefarvenApp/lib/whist/whistwidgets/whistutil/const_bids.dart';
 import 'package:tredjefarven/whist/scoresheet_whist.dart';
 
 class Game {
