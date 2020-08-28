@@ -1,9 +1,10 @@
 class Round {
 
 	String biddingPlayer, bidType;
-	List<String> partners;
+	List<String> partnersOrNoloJoiners;
 	int bidSize, tricksGotten;
+	List<bool> noloWonLoseList;
 
-	Round(this.biddingPlayer, this.partners, this.bidType, this.bidSize, this.tricksGotten);
+	Round(this.biddingPlayer, this.partnersOrNoloJoiners, this.bidType, this.bidSize, this.tricksGotten, this.noloWonLoseList);
 
 }

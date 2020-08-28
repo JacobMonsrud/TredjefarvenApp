@@ -119,8 +119,12 @@ class _EnterNamesWhistState extends State<EnterNamesWhist> {
 		p2c.text = "Kasper";
 		p3c.text = "Mathias";
 		p4c.text = "Oskar";
+
 		bool allNamedFilled = p1c.text.isNotEmpty && p2c.text.isNotEmpty && p3c.text.isNotEmpty && p4c.text.isNotEmpty;
-		if (allNamedFilled) {
+		Set<String> allNames = Set();
+		allNames.addAll([p1c.text, p2c.text, p3c.text, p4c.text]);
+		bool allUnique = allNames.length == 4;
+		if (allNamedFilled && allUnique) {
 			widget.callback(p1c.text, p2c.text, p3c.text, p4c.text);
 		} else {
 			_showToast();
@@ -141,7 +145,7 @@ class _EnterNamesWhistState extends State<EnterNamesWhist> {
 					SizedBox(
 						width: 12.0,
 					),
-					Text("You must enter all four names!"),
+					Text("You must enter all four unique names!"),
 				],
 			),
 		);

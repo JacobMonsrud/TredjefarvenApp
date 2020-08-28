@@ -1,7 +1,7 @@
 import 'package:tredjefarven/whist/player_round_whist.dart';
 import 'package:tredjefarven/whist/player_whist.dart';
 import 'package:tredjefarven/whist/round_whist.dart';
-import 'file:///C:/Tredjefarven/tredjefarvenApp/TredjefarvenApp/lib/whist/whistwidgets/whistutil/const_bids.dart';
+import 'package:tredjefarven/whist/whistwidgets/whistutil/const_bids.dart';
 import 'package:tredjefarven/whist/scoresheet_whist.dart';
 
 class Game {
@@ -20,7 +20,7 @@ class Game {
 	}
 
 	void reportNewRound(Round round) {
-		print(round.biddingPlayer + " " + round.partners.toString() + " " + round.bidType + " " + round.bidSize.toString() + " " + round.tricksGotten.toString());
+		//print(round.biddingPlayer + " " + round.partnersOrNoloJoiners.toString() + " " + round.bidType + " " + round.bidSize.toString() + " " + round.tricksGotten.toString());
 
 		Map<String, Player> mapPlayers = { "p1": this.p1, "p2": this.p2, "p3": this.p3, "p4": this.p4, };
 
@@ -29,9 +29,47 @@ class Game {
 		if (isNolo) {
 			double point = scoreSheet.getNoloPoint(round.bidType);
 
+			double tempP1 = 0;
+			double tempP2 = 0;
+			double tempP3 = 0;
+			double tempP4 = 0;
+
+			List<String> allNoloPlayers = round.partnersOrNoloJoiners;
+			allNoloPlayers.add(round.biddingPlayer);
+
+			if (allNoloPlayers.contains("p1")) {
+				int won = round.noloWonLoseList[0] ? 1 : -1;
+				tempP1 += won * 3 * point;
+				tempP2 += won * -1 * point;
+				tempP3 += won * -1 * point;
+				tempP4 += won * -1 * point;
+			} if (allNoloPlayers.contains("p2")) {
+				int won = round.noloWonLoseList[1] ? 1 : -1;
+				tempP1 += won * -1 * point;
+				tempP2 += won * 3 * point;
+				tempP3 += won * -1 * point;
+				tempP4 += won * -1 * point;
+			} if (allNoloPlayers.contains("p3")) {
+				int won = round.noloWonLoseList[2] ? 1 : -1;
+				tempP1 += won * -1 * point;
+				tempP2 += won * -1 * point;
+				tempP3 += won * 3 * point;
+				tempP4 += won * -1 * point;
+			} if (allNoloPlayers.contains("p4")) {
+				int won = round.noloWonLoseList[3] ? 1 : -1;
+				tempP1 += won * -1 * point;
+				tempP2 += won * -1 * point;
+				tempP3 += won * -1 * point;
+				tempP4 += won * 3 * point;
+			}
+
+			p1.reportNewRound(PlayerRound("p1" == round.biddingPlayer, round.partnersOrNoloJoiners.contains("p1"), round.noloWonLoseList[0], round.bidType, tempP1));
+			p2.reportNewRound(PlayerRound("p2" == round.biddingPlayer, round.partnersOrNoloJoiners.contains("p2"), round.noloWonLoseList[1], round.bidType, tempP2));
+			p3.reportNewRound(PlayerRound("p3" == round.biddingPlayer, round.partnersOrNoloJoiners.contains("p3"), round.noloWonLoseList[2], round.bidType, tempP3));
+			p4.reportNewRound(PlayerRound("p4" == round.biddingPlayer, round.partnersOrNoloJoiners.contains("p4"), round.noloWonLoseList[3], round.bidType, tempP4));
 
 		} else {
-			bool isTwoVsTwo = (round.partners.length == 1);
+			bool isTwoVsTwo = (round.partnersOrNoloJoiners.length == 1);
 
 			double point = scoreSheet.getPoint(round.bidSize, round.tricksGotten);
 			int multiplier = scoreSheet.getMultiplier(round.bidType);
@@ -44,12 +82,12 @@ class Game {
 			opo.remove(round.biddingPlayer);
 
 			if (isTwoVsTwo) {
-				opo.remove(round.partners[0]);
+				opo.remove(round.partnersOrNoloJoiners[0]);
 				isAloneMultiplier = 1;
 
 				// The partner
 				PlayerRound playerRoundPartner = PlayerRound(false, true, (totalPointForBidder > 0), round.bidSize.toString() + " " + round.bidType, totalPointForBidder);
-				mapPlayers[round.partners[0]].reportNewRound(playerRoundPartner);
+				mapPlayers[round.partnersOrNoloJoiners[0]].reportNewRound(playerRoundPartner);
 
 			} else {
 				// 1 v 3

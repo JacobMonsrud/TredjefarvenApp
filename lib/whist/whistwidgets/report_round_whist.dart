@@ -21,7 +21,7 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
   ConstBids constBids = ConstBids();
   FlutterToast flutterToast;
 
-  bool showNolo, showTricks;
+  bool showNolo, showTricks, showNoloP1, showNoloP2, showNoloP3, showNoloP4;
 
   Map<String, NamesRaisedButton> namesMap = Map();
   Map<String, BidRaisedButton> bidTypeMap = Map();
@@ -34,10 +34,10 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
 
   @override
   void initState() {
-    namesMap.addAll( {"p1": NamesRaisedButton(widget.game.p1.name, this.constColors),
-      "p2": NamesRaisedButton(widget.game.p2.name, this.constColors),
-      "p3": NamesRaisedButton(widget.game.p3.name, this.constColors),
-      "p4": NamesRaisedButton(widget.game.p4.name, this.constColors), });
+    namesMap.addAll( {"p1": NamesRaisedButton(widget.game.p1.name, this.constColors, this.namesButtonNoloPlayers),
+      "p2": NamesRaisedButton(widget.game.p2.name, this.constColors, this.namesButtonNoloPlayers),
+      "p3": NamesRaisedButton(widget.game.p3.name, this.constColors, this.namesButtonNoloPlayers),
+      "p4": NamesRaisedButton(widget.game.p4.name, this.constColors, this.namesButtonNoloPlayers), });
 
     bidTypeMap.addAll( {constBids.ALM: BidRaisedButton(constBids.ALM, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setStatusForTrickOrNoloLayout),
       constBids.HALVE: BidRaisedButton(constBids.HALVE, this.constColors, 4.0, this.setStandardColorOnBidTypeButtons, this.setStatusForTrickOrNoloLayout),
@@ -73,20 +73,24 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
       "12": BidRaisedButton("12", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setStatusForTrickOrNoloLayout),
       "13": BidRaisedButton("13", this.constColors, 7.0, this.setStandardColorOnTricksGottenButtons, this.setStatusForTrickOrNoloLayout), });
 
-    noloMapP1.addAll( {constBids.P1NOLOWON: BidRaisedButton("p1win", this.constColors, 2, this.setStandardColorOnNoloP1Buttons, (s) => {}),
-      constBids.P1NOLOLOSE: BidRaisedButton("p1lose", this.constColors, 2, this.setStandardColorOnNoloP1Buttons, (s) => {}) });
+    noloMapP1.addAll( {constBids.P1NOLOWON: BidRaisedButton(widget.game.p1.name + " vandt", this.constColors, 2, this.setStandardColorOnNoloP1Buttons, (s) => {}),
+      constBids.P1NOLOLOSE: BidRaisedButton(widget.game.p1.name + " tabte", this.constColors, 2, this.setStandardColorOnNoloP1Buttons, (s) => {}) });
 
-    noloMapP2.addAll( {constBids.P2NOLOWON: BidRaisedButton("p2win", this.constColors, 2, this.setStandardColorOnNoloP2Buttons, (s) => {}),
-      constBids.P2NOLOLOSE: BidRaisedButton("p2lose", this.constColors, 2, this.setStandardColorOnNoloP2Buttons, (s) => {}) });
+    noloMapP2.addAll( {constBids.P2NOLOWON: BidRaisedButton(widget.game.p2.name + " vandt", this.constColors, 2, this.setStandardColorOnNoloP2Buttons, (s) => {}),
+      constBids.P2NOLOLOSE: BidRaisedButton(widget.game.p2.name + " tabte", this.constColors, 2, this.setStandardColorOnNoloP2Buttons, (s) => {}) });
 
-    noloMapP3.addAll( {constBids.P3NOLOWON: BidRaisedButton("p3win", this.constColors, 2, this.setStandardColorOnNoloP3Buttons, (s) => {}),
-      constBids.P3NOLOLOSE: BidRaisedButton("p3lose", this.constColors, 2, this.setStandardColorOnNoloP3Buttons, (s) => {}) });
+    noloMapP3.addAll( {constBids.P3NOLOWON: BidRaisedButton(widget.game.p3.name + " vandt", this.constColors, 2, this.setStandardColorOnNoloP3Buttons, (s) => {}),
+      constBids.P3NOLOLOSE: BidRaisedButton(widget.game.p3.name + " tabte", this.constColors, 2, this.setStandardColorOnNoloP3Buttons, (s) => {}) });
 
-    noloMapP4.addAll( {constBids.P4NOLOWON: BidRaisedButton("p4win", this.constColors, 2, this.setStandardColorOnNoloP4Buttons, (s) => {}),
-      constBids.P4NOLOLOSE: BidRaisedButton("p4lose", this.constColors, 2, this.setStandardColorOnNoloP4Buttons, (s) => {}) });
+    noloMapP4.addAll( {constBids.P4NOLOWON: BidRaisedButton(widget.game.p4.name + " vandt", this.constColors, 2, this.setStandardColorOnNoloP4Buttons, (s) => {}),
+      constBids.P4NOLOLOSE: BidRaisedButton(widget.game.p4.name + " tabte", this.constColors, 2, this.setStandardColorOnNoloP4Buttons, (s) => {}) });
 
     showNolo = false;
     showTricks = true;
+    showNoloP1 = false;
+    showNoloP2 = false;
+    showNoloP3 = false;
+    showNoloP4 = false;
 
     flutterToast = FlutterToast(context);
     super.initState();
@@ -113,10 +117,13 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
 							mainAxisAlignment: MainAxisAlignment.spaceAround,
               ),
               SizedBox(height: 10),
-              Text(
-                "Angiv spilføreren (dobbelt klik) og eventuel makker (enkelt klik):",
-                style: TextStyle(
-                  color: constColors.textColor,
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  "Angiv spilføreren (dobbelt klik) og eventuel makker (enkelt klik):",
+                  style: TextStyle(
+                    color: constColors.textColor,
+                  ),
                 ),
               ),
               SizedBox(height: 10),
@@ -254,33 +261,66 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
               Visibility(
                 child: Column(
                   children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        this.noloMapP1[constBids.P1NOLOWON],
-                        this.noloMapP1[constBids.P1NOLOLOSE],
-                      ],
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            "Angiv om nolo melding blev vundet:",
+                            style: TextStyle(
+                              color: constColors.textColor,
+                            ),
+                          ),
+                        ],
+                        mainAxisAlignment: MainAxisAlignment.start,
+                      ),
                     ),
-                    Row(
-                      children: <Widget>[
-                        this.noloMapP2[constBids.P2NOLOWON],
-                        this.noloMapP2[constBids.P2NOLOLOSE],
-                      ],
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                    SizedBox(height: 10),
+
+                    Visibility(
+                      child: Row(
+                        children: <Widget>[
+                          this.noloMapP1[constBids.P1NOLOWON],
+                          this.noloMapP1[constBids.P1NOLOLOSE],
+                        ],
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      ),
+                      visible: showNoloP1,
+                      maintainState: true,
                     ),
-                    Row(
-                      children: <Widget>[
-                        this.noloMapP3[constBids.P3NOLOWON],
-                        this.noloMapP3[constBids.P3NOLOLOSE],
-                      ],
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    Visibility(
+                      child: Row(
+                        children: <Widget>[
+                          this.noloMapP2[constBids.P2NOLOWON],
+                          this.noloMapP2[constBids.P2NOLOLOSE],
+                        ],
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      ),
+                      visible: showNoloP2,
+                      maintainState: true,
                     ),
-                    Row(
-                      children: <Widget>[
-                        this.noloMapP4[constBids.P4NOLOWON],
-                        this.noloMapP4[constBids.P4NOLOLOSE],
-                      ],
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    Visibility(
+                      child: Row(
+                        children: <Widget>[
+                          this.noloMapP3[constBids.P3NOLOWON],
+                          this.noloMapP3[constBids.P3NOLOLOSE],
+                        ],
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      ),
+                      visible: showNoloP3,
+                      maintainState: true,
+                    ),
+                    Visibility(
+                      child: Row(
+                        children: <Widget>[
+                          this.noloMapP4[constBids.P4NOLOWON],
+                          this.noloMapP4[constBids.P4NOLOLOSE],
+                        ],
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      ),
+                      visible: showNoloP4,
+                      maintainState: true,
                     ),
                   ],
                 ),
@@ -289,6 +329,7 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
               ),
 
               SizedBox(height: 20),
+
               SizedBox(
                 width: MediaQuery.of(context).size.width / 1.5,
                 child: RaisedButton(
@@ -314,28 +355,23 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
 
     int numberOfPresses = 0;
     this.namesMap.forEach((k, v) { if(v.isPressed()) numberOfPresses++; });
-    bool isNumberOfPressedNamesZeroOrOne = numberOfPresses == 0 || numberOfPresses == 1;
+    bool isNumberOfPressedNamesZeroOrOne = (numberOfPresses == 0 || numberOfPresses == 1);
 
     int numberOfDoublePresses = 0;
     this.namesMap.forEach((k, v) { if(v.isDoublePressed()) numberOfDoublePresses++; });
-    bool isCorrectNumberOfDoublePresses = numberOfDoublePresses == 1;
+    bool isCorrectNumberOfDoublePresses = (numberOfDoublePresses == 1);
 
     String bidType = "";
     this.bidTypeMap.forEach((k, v) { if(v.isPressed()) bidType = v.text; });
 
-    String bidSize = "";
+    String bidSize = "0";
     this.bidSizeMap.forEach((k, v) { if(v.isPressed()) bidSize = v.text; });
 
-    String tricksGotten = "";
+    String tricksGotten = "0";
     this.tricksGottenMap.forEach((k, v) { if(v.isPressed()) tricksGotten = v.text; });
 
-    bool isNoloBid = false;
-    bool isRegularBid = false;
-    if ([constBids.SOL, constBids.RENSOL, constBids.BORD, constBids.RENBORD].contains(bidType)) {
-      isNoloBid = true;
-    } else if ([constBids.ALM, constBids.HALVE, constBids.GODE, constBids.SANS, constBids.VIP1, constBids.VIP2, constBids.VIP3].contains(bidType)) {
-      isRegularBid = true;
-    }
+    bool isNoloBid = [constBids.SOL, constBids.RENSOL, constBids.BORD, constBids.RENBORD].contains(bidType);
+    bool isRegularBid = [constBids.ALM, constBids.HALVE, constBids.GODE, constBids.SANS, constBids.VIP1, constBids.VIP2, constBids.VIP3].contains(bidType);
 
     bool isOnValidBidSize = bidSize.length > 0;
 
@@ -344,7 +380,30 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
     bool isValidConfig = false;
 
     if (isNoloBid) {
-      isValidConfig = isCorrectNumberOfDoublePresses && !isOnValidBidSize && isOnValidTricksGotten;
+      bool p1Correct = true;
+      bool p2Correct = true;
+      bool p3Correct = true;
+      bool p4Correct = true;
+
+      if (showNoloP1) {
+        p1Correct = false;
+        this.noloMapP1.forEach((k, v) { if(v.isPressed()) p1Correct = true; });
+      }
+      if (showNoloP2) {
+        p2Correct = false;
+        this.noloMapP2.forEach((k, v) { if(v.isPressed()) p2Correct = true; });
+      }
+      if (showNoloP3) {
+        p3Correct = false;
+        this.noloMapP3.forEach((k, v) { if(v.isPressed()) p3Correct = true; });
+      }
+      if (showNoloP4) {
+        p4Correct = false;
+        this.noloMapP4.forEach((k, v) { if(v.isPressed()) p4Correct = true; });
+      }
+
+      isValidConfig = isCorrectNumberOfDoublePresses && p1Correct && p2Correct && p3Correct && p4Correct;
+
     } else if (isRegularBid) {
       isValidConfig = isCorrectNumberOfDoublePresses && isNumberOfPressedNamesZeroOrOne && isOnValidBidSize && isOnValidTricksGotten;
     } else {
@@ -356,10 +415,16 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
       String bidder;
       this.namesMap.forEach((k, v) { if(v.isDoublePressed()) bidder = k; });
 
-      List<String> partners = [];
-      this.namesMap.forEach((k, v) { if(v.isPressed()) partners.add(k); });
+      List<String> partnersOrNoloJoiners = [];
+      this.namesMap.forEach((k, v) { if(v.isPressed()) partnersOrNoloJoiners.add(k); });
 
-      Round round = Round(bidder, partners, bidType, int.parse(bidSize), int.parse(tricksGotten));
+      List<bool> noloWonLoseList = [];
+      noloWonLoseList.add(this.noloMapP1[constBids.P1NOLOWON].isPressed());
+      noloWonLoseList.add(this.noloMapP2[constBids.P2NOLOWON].isPressed());
+      noloWonLoseList.add(this.noloMapP3[constBids.P3NOLOWON].isPressed());
+      noloWonLoseList.add(this.noloMapP4[constBids.P4NOLOWON].isPressed());
+
+      Round round = Round(bidder, partnersOrNoloJoiners, bidType, int.parse(bidSize), int.parse(tricksGotten), noloWonLoseList);
 
       this.widget.callback(round);
     } else {
@@ -421,6 +486,20 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
       } else {
         showNolo = false;
         showTricks = true;
+      }
+    });
+  }
+
+  void namesButtonNoloPlayers(String name, bool pressed) {
+    setState(() {
+      if (widget.game.p1.name == name) {
+        showNoloP1 = pressed;
+      } else if (widget.game.p2.name == name) {
+        showNoloP2 = pressed;
+      } else if (widget.game.p3.name == name) {
+        showNoloP3 = pressed;
+      } else if (widget.game.p4.name == name) {
+        showNoloP4 = pressed;
       }
     });
   }

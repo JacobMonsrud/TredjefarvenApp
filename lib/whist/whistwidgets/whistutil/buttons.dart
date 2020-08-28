@@ -4,8 +4,9 @@ import 'package:tredjefarven/util/const_colors.dart';
 class NamesRaisedButton extends StatefulWidget {
   final String text;
   final ConstColors constColors;
+  final Function(String, bool) callback;
 
-  NamesRaisedButton(this.text, this.constColors);
+  NamesRaisedButton(this.text, this.constColors, this.callback);
 
   final _NamesRaisedButtonState _namesRaisedButtonState = _NamesRaisedButtonState();
 
@@ -56,6 +57,7 @@ class _NamesRaisedButtonState extends State<NamesRaisedButton> {
               this.isPressed = false;
               this.isDoublePressed = false;
             }
+            this.widget.callback(this.widget.text, this.isPressed || this.isDoublePressed);
           });
         },
       ),
