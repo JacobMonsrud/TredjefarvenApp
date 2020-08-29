@@ -38,7 +38,7 @@ class _NamesRaisedButtonState extends State<NamesRaisedButton> {
         child: Text(
           this.widget.text,
           style: TextStyle(
-            color: this.widget.constColors.textColor,
+            color: this.widget.constColors.btnTextColor,
           ),
         ),
         color: color,
@@ -108,7 +108,7 @@ class _BidRaisedButtonState extends State<BidRaisedButton> {
         child: Text(
           this.widget.text,
           style: TextStyle(
-            color: this.widget.constColors.textColor,
+            color: this.widget.constColors.btnTextColor,
           ),
         ),
         color: this.color,

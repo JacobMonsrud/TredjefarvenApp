@@ -266,7 +266,7 @@ class _ReportRoundWhistState extends State<ReportRoundWhist> {
                       child: Row(
                         children: <Widget>[
                           Text(
-                            "Angiv om nolo melding blev vundet:",
+                            "Angiv om nolo meldingen blev vundet:",
                             style: TextStyle(
                               color: constColors.textColor,
                             ),

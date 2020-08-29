@@ -20,7 +20,6 @@ class Game {
 	}
 
 	void reportNewRound(Round round) {
-		//print(round.biddingPlayer + " " + round.partnersOrNoloJoiners.toString() + " " + round.bidType + " " + round.bidSize.toString() + " " + round.tricksGotten.toString());
 
 		Map<String, Player> mapPlayers = { "p1": this.p1, "p2": this.p2, "p3": this.p3, "p4": this.p4, };
 

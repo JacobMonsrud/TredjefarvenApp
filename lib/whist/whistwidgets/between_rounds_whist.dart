@@ -17,20 +17,28 @@ class BetweenRoundsWhist extends StatefulWidget {
 class _BetweenRoundsWhistState extends State<BetweenRoundsWhist> {
 	ConstColors constColors = ConstColors();
 	List<TableRow> rows;
+	List<String> playerNames;
+
+	@override
+  void initState() {
+		// The p4, p1, p2, p3 order is on purpose!!
+    playerNames = [widget.game.p4.name, widget.game.p1.name, widget.game.p2.name, widget.game.p3.name];
+    super.initState();
+  }
 
 	@override
 	Widget build(BuildContext context) {
 		rows = [];
 		for (int i = 0; i < this.widget.game.getPointLists()[0].length; i++) {
 			rows.add(TableRow( children: [
-				Text(i.toString()),
-				Text(this.widget.game.getPointLists()[0][i].toString()),
-				Text(this.widget.game.getPointLists()[1][i].toString()),
-				Text(this.widget.game.getPointLists()[2][i].toString()),
-				Text(this.widget.game.getPointLists()[3][i].toString()),
+				Text(i.toString(), style: TextStyle(color: constColors.textColor)),
+				Text(this.widget.game.getPointLists()[0][i].toString(), style: TextStyle(color: constColors.textColor)),
+				Text(this.widget.game.getPointLists()[1][i].toString(), style: TextStyle(color: constColors.textColor)),
+				Text(this.widget.game.getPointLists()[2][i].toString(), style: TextStyle(color: constColors.textColor)),
+				Text(this.widget.game.getPointLists()[3][i].toString(), style: TextStyle(color: constColors.textColor)),
 			]));
 		}
-		rows = rows.reversed.toList();
+		//rows = rows.reversed.toList();
 
 		return Scaffold(
 			backgroundColor: constColors.bgColor,
@@ -123,12 +131,17 @@ class _BetweenRoundsWhistState extends State<BetweenRoundsWhist> {
 
 							SizedBox(height: 10),
 
-							Text(
-									"Udspil næste runde (23): \nTrends: Kasper har tabt 5 i streg!",
-									style: TextStyle(
-										color: constColors.textColor,
+							Row(
+								mainAxisAlignment: MainAxisAlignment.start,
+								children: <Widget>[
+									Text(
+										"Udspil næste runde: " + playerNames[(widget.game.p1.pointList.length % 4)],
+										style: TextStyle(
+											color: constColors.textColor,
+										),
 									),
-								),
+								],
+							),
 
 							SizedBox(height: 10),
 
@@ -140,7 +153,7 @@ class _BetweenRoundsWhistState extends State<BetweenRoundsWhist> {
 											child: Text(
 												"Afslut spillet",
 												style: TextStyle(
-													color: constColors.textColor,
+													color: constColors.btnTextColor,
 												),
 											),
 											color: constColors.btnColor,
@@ -153,7 +166,7 @@ class _BetweenRoundsWhistState extends State<BetweenRoundsWhist> {
 											child: Text(
 												"Slet sidste runde",
 												style: TextStyle(
-													color: constColors.textColor,
+													color: constColors.btnTextColor,
 												),
 											),
 											color: constColors.btnColor,
@@ -173,7 +186,7 @@ class _BetweenRoundsWhistState extends State<BetweenRoundsWhist> {
 											    Text(
 											    	"Næste runde",
 											    	style: TextStyle(
-											    		color: constColors.textColor,
+											    		color: constColors.btnTextColor,
 											    	),
 											    ),
 													Icon(Icons.arrow_forward),

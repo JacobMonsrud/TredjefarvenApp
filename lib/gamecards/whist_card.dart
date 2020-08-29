@@ -21,7 +21,7 @@ class WhistCard extends StatelessWidget {
 								style: TextStyle(
 									letterSpacing: 2.0,
 									fontSize: 30.0,
-									color: constColors.titelColor,
+									color: constColors.titelCardColor,
 								),
 							),
 						),
@@ -29,7 +29,7 @@ class WhistCard extends StatelessWidget {
 							child: Text(
 								'Quickgame',
 								style: TextStyle(
-									color: constColors.textColor,
+									color: constColors.btnTextColor,
 								),
 							),
 							color: constColors.btnColor,
@@ -41,7 +41,7 @@ class WhistCard extends StatelessWidget {
 							child: Text(
 								'My ranked games',
 								style: TextStyle(
-									color: constColors.textColor,
+									color: constColors.btnTextColor,
 								),
 							),
 							color: constColors.btnColor,
@@ -51,7 +51,7 @@ class WhistCard extends StatelessWidget {
 								child: Text(
 									'Create new ranked game',
 									style: TextStyle(
-										color: constColors.textColor,
+										color: constColors.btnTextColor,
 									),
 								),
 								color: constColors.btnColor,

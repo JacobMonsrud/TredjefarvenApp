@@ -68,7 +68,7 @@ class _EnterNamesWhistState extends State<EnterNamesWhist> {
 							TextField(
 								controller: p1c,
 								decoration: InputDecoration(
-										border: OutlineInputBorder(), hintText: 'Player 1 name'),
+										border: OutlineInputBorder(), hintText: 'Spiller 1 navn'),
 							),
 							SizedBox(
 								height: 20.0,
@@ -76,7 +76,7 @@ class _EnterNamesWhistState extends State<EnterNamesWhist> {
 							TextField(
 								controller: p2c,
 								decoration: InputDecoration(
-										border: OutlineInputBorder(), hintText: 'Player 2 name'),
+										border: OutlineInputBorder(), hintText: 'Spiller 2 navn'),
 							),
 							SizedBox(
 								height: 20.0,
@@ -84,7 +84,7 @@ class _EnterNamesWhistState extends State<EnterNamesWhist> {
 							TextField(
 								controller: p3c,
 								decoration: InputDecoration(
-										border: OutlineInputBorder(), hintText: 'Player 3 name'),
+										border: OutlineInputBorder(), hintText: 'Spiller 3 navn'),
 							),
 							SizedBox(
 								height: 20.0,
@@ -92,7 +92,7 @@ class _EnterNamesWhistState extends State<EnterNamesWhist> {
 							TextField(
 								controller: p4c,
 								decoration: InputDecoration(
-										border: OutlineInputBorder(), hintText: 'Player 4 name'),
+										border: OutlineInputBorder(), hintText: 'Spiller 4 navn'),
 							),
 							SizedBox(
 								height: 20.0,
@@ -101,9 +101,9 @@ class _EnterNamesWhistState extends State<EnterNamesWhist> {
 								onPressed: _startGame,
 								color: constColors.btnColor,
 								child: Text(
-									"Press when ready!",
+									"Tryk når i er klar!",
 									style: TextStyle(
-										color: constColors.textColor,
+										color: constColors.btnTextColor,
 									),
 								),
 							),
